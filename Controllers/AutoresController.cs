@@ -29,6 +29,29 @@ namespace autores_api.Controllers
             return Ok();
 
         }
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int id, Autor autor)
+        {
+            if(autor.Id != id)
+            return BadRequest("El ID del autor no coincide con el id de la URL");
+
+            dbContext.Update(autor);
+            await dbContext.SaveChangesAsync();
+            return Ok();
+
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id){
+            var existe = await dbContext.Autores.AnyAsync(x => x.Id == id);
+
+            if(!existe)
+            return NotFound();
+
+            dbContext.Remove(new Autor(){Id = id});
+            await dbContext.SaveChangesAsync();
+            return Ok();
+        }
 
 
     }
